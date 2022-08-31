@@ -29,7 +29,14 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
+	/*junit 테스트 하는데 junit5에서 junit4의 어떤 라이브러리랑 충돌이 나서 안되는거였음 제외하는 코드*/
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.springframework.boot:spring-boot-starter-test:2.1.16.RELEASE') {
+        exclude group: 'junit', module: 'junit'
+    }
+    testImplementation platform('org.junit:junit-bom:5.6.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:'
 }
 
 tasks.named('test') {
