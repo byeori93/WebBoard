@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace에는 인터페이스 매퍼의 경로를 지정 -->
+<mapper namespace="com.board.study.domain.post.PostMapper">
+
+	<!-- sql은 자주 사용하는 sql 조각을 선언해두고 사용할 수 있게 해주는 문구 -->
+	<!-- TB_POST 테이블의 전체 컬럼 -->
+	<sql id="postColumns">
+		ID,
+		TITLE,
+		CONTENT,
+		WRITER,
+		VIEW_CNT,
+		NOTICE_YN,
+		DELETE_YN,
+		CREATED_DATE,
+		MODIFIED_DATE
+	</sql>
+	
+	<!-- 게시글 저장 -->
+	<!-- 이때의 id는 인터페이스의 메소드명과 일치해야함 -->
+	<!-- parameterType은 말 그대로 parameterType 인터페이스에서 지정한 parameterType의 경로를 지정해준다(e.g. String이면 그냥 String) -->
+	<!-- Include는 sql에서 지정한 조각을 불러오는 구문 -->
+	<!-- #{}안에는 변수명 써야함 -->
+	<insert id="save" parameterType="com.board.study.domain.post.PostRequest">
+		INSERT INTO TB_POST (
+			<include refid="postColumns"/>
+		) VALUES (
+			#{id},
+			#{title},
+			#{content},
+			#{writer},
+			0,
+			#{noticeYn},
+			0,
+			NOW(),
+			NULL
+		)
+	</insert>
+	
+	<!-- 게시글 조회 -->
+	<select id="findById" parameterType="long" resultType="com.board.study.domain.post.PostResponse">
+		SELECT
+			<include refid="postColumns"/>
+		FROM
+			TB_POST
+		WHERE
+			ID = #{id}
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="update" parameterType="com.board.study.domain.post.PostRequest">
+		UPDATE
+			TB_POST
+		SET
+			MODIFIED_DATE = NOW(),
+			TITLE = #{title},
+			CONTENT = #{content},
+			WRITER = #{writer},
+			NOTICE_YN = #{noticeYn}
+		WHERE
+			ID = #{id}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deleteById" parameterType="long">
+		UPDATE
+			TB_POST
+		SET
+			DELETE_YN = 1
+		WHERE
+			ID = #{id}
+	</delete>
+	
+	<!-- 게시글 리스트 조회 -->
+	<select id="findAll" resultType="com.board.study.domain.post.PostResponse">
+	SELECT
+		<include refid="postColumns"/>
+	FROM
+		TB_POST
+	WHERE
+		DELETE_YN = 0
+	ORDER BY
+		ID DESC
+	</select>
+</mapper>
