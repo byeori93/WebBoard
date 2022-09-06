@@ -1,5 +1,7 @@
 package com.board.study.domain.post;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,5 +31,13 @@ public class PostController {
 	public String savePost(final PostRequest params) {
 		postService.savePost(params);
 		return "redirect:/post/list.do";
+	}
+	
+	//게시글 리스트
+	@GetMapping("/post/list.do")
+	public String openPostList(Model model) {
+		List<PostResponse> posts = postService.findAllPost();
+		model.addAttribute("posts", posts);
+		return "post/list";
 	}
 }
