@@ -29,9 +29,9 @@
     			<tbody>
     				<tr th:if="${not #lists.isEmpty(posts)}" th:each="row, status : ${posts}">
     					<td th:text="${row.noticeYn == true ? '공지' : status.size - status.index}"></td>
-    					<td class="text-left"><a th:herf="@{/post/view.do( id=${row.id} )}" th:text="${row.title}"></a></td>
+    					<td class="text-left"><a th:href="@{/post/view.do( id=${row.id} )}" th:text="${row.title}"></a></td>
     					<td th:text="${row.writer}"></td>
-    					<td th:text="${#temporals.format( row.createDate, 'yyyy-MM-dd HH:mm:ss' )}"></td>
+    					<td th:text="${#temporals.format( row.createdDate, 'yyyy-MM-dd HH:mm:ss' )}"></td>
     					<td th:text="${row.viewCnt}"></td>
     				</tr>
     				
@@ -42,7 +42,7 @@
     		</table>
     		
     		<div class="btn_reap text-right">
-    			<a th:href="@{post/write.do}" class="btn btn-primary waves-effect waves-light">등록</a>
+    			<a th:href="@{/post/write.do}" class="btn btn-primary waves-effect waves-light">등록</a>
     		</div>
     		
     		<th:block layout:fragment="paging">
