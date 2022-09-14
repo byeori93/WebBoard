@@ -5,6 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.board.study.common.dto.SearchDTO;
+import com.board.study.paging.Pagination;
+import com.board.study.paging.PagingResponse;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -54,11 +58,18 @@ public class PostService {
 		return id;
 	}
 	
+
 	/**
 	 * 게시글 리스트 조회
-	 * @return 게시글 리스트
+	 * @param params - search conditions
+	 * @return list and pagination information
 	 */
-	public List<PostResponse> findAllPost() {
-		return postMapper.findAll();
+	public PagingResponse<PostResponse> findAllPost(final SearchDTO params) {
+		int count = postMapper.count(params);
+		Pagination pagination = new Pagination(count, params);
+		params.setPagination(pagination);
+		
+		List<PostResponse> list = postMapper.findAll(params);
+		return new PagingResponse<>(list, pagination);
 	}
 }

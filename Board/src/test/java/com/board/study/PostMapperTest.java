@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.board.study.common.dto.SearchDTO;
 import com.board.study.domain.post.PostMapper;
 import com.board.study.domain.post.PostRequest;
 import com.board.study.domain.post.PostResponse;
@@ -25,7 +26,8 @@ public class PostMapperTest {
 		params.setNoticeYn(false);
 		postMapper.save(params);
 		
-		List<PostResponse> posts = postMapper.findAll();
+		SearchDTO page = new SearchDTO();
+		List<PostResponse> posts = postMapper.findAll(page);
 		System.out.println("전체 게시글 수는 " + posts.size() + "개 입니다.");
 	}
 	
@@ -69,8 +71,9 @@ public class PostMapperTest {
 	
     @Test
     void delete() {
-        System.out.println("삭제 이전의 전체 게시글 개수는 : " + postMapper.findAll().size() + "개입니다.");
+    	SearchDTO page = new SearchDTO();
+        System.out.println("삭제 이전의 전체 게시글 개수는 : " + postMapper.findAll(page).size() + "개입니다.");
         postMapper.deleteById(1L);
-        System.out.println("삭제 이후의 전체 게시글 개수는 : " + postMapper.findAll().size() + "개입니다.");
+        System.out.println("삭제 이후의 전체 게시글 개수는 : " + postMapper.findAll(page).size() + "개입니다.");
     }
 }
