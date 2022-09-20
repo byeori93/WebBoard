@@ -1,5 +1,7 @@
 package com.board.study.domain.post;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +42,9 @@ public class PostController {
 	
 	//게시글 업데이트
 	@PostMapping("/post/update.do")
-	public String updatePost(final PostRequest params, Model model) {
+	public String updatePost(@RequestParam final Map<String, Object> qeuryParams, final PostRequest params, Model model) {
 		postService.updatePost(params);
-		MessageDTO message = new MessageDTO("게시글 수정이 완료되었습니다", "/post/list.do", RequestMethod.GET, null);
+		MessageDTO message = new MessageDTO("게시글 수정이 완료되었습니다", "/post/list.do", RequestMethod.GET, qeuryParams);
 		return showMessageAndRedirect(message, model);
 	}
 	
@@ -64,9 +66,11 @@ public class PostController {
 	
 	//게시글 삭제
 	@PostMapping("/post/delete.do")
-	public String deletePost(@RequestParam final Long id, Model model) {
+	public String deletePost(@RequestParam final Long id,
+							 @RequestParam final Map<String, Object> queryParmas,
+							 Model model) {
 		postService.deletePost(id);
-		MessageDTO message = new MessageDTO("게시글 삭제가 완료되었습니다", "/post/list.do", RequestMethod.GET, null);
+		MessageDTO message = new MessageDTO("게시글 삭제가 완료되었습니다", "/post/list.do", RequestMethod.GET, queryParmas);
 		return showMessageAndRedirect(message, model);
 	}
 	
