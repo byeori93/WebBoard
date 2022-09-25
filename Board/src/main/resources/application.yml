@@ -1,0 +1,22 @@
+#spring.datasource.hikari.driver-class-name=net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#spring.datasource.hikari.jdbc-url=jdbc:log4jdbc:mysql://localhost:3306/board?serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+#spring.datasource.hikari.username=root
+#spring.datasource.hikari.password=sh100422
+#spring.datasource.hikari.connection-test-query=SELECT NOW() FROM dual
+#column name to camel case 카멜케이스가 변수명 정하는 룰
+#mybatis.configuration.map-underscore-to-camel-case=true
+#Gson HTTP Message Converter 설정
+#spring.mvc.converters.preferred-json-mapper=gson
+
+#aws rdsdb 연결
+spring:
+ datasource:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://db-board.cztda90bd5ap.ap-northeast-2.rds.amazonaws.com:3306/BOARD?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  username: fkskqufgk
+  password: sh100422
+
+#column name to camel case 카멜케이스가 변수명 정하는 룰
+mybatis:
+ configuration:
+  map-underscore-to-camel-case: true
