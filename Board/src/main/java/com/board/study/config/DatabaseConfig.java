@@ -50,7 +50,6 @@ public class DatabaseConfig {
 		return entityManagerFactoryBuilder.dataSource(dataSource()).packages("com.board.study").build();
 	}
 	
-	
 	private EntityManagerFactoryBuilder createEntityMangerFactoryBuilder(JpaProperties jpaProperties) {
 		AbstractJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		return new EntityManagerFactoryBuilder(vendorAdapter, jpaProperties.getProperties(), null);
@@ -61,11 +60,6 @@ public class DatabaseConfig {
 		JpaTransactionManager tm = new JpaTransactionManager();
 		tm.setEntityManagerFactory(entityManagerFactory);
 		return tm;
-	}
-	
-	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new JdbcTemplate(dataSource);
 	}
 	
 	@Bean
