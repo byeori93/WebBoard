@@ -12,9 +12,22 @@
 spring:
  datasource:
   driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://db-board.cztda90bd5ap.ap-northeast-2.rds.amazonaws.com:3306/BOARD?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  jdbc-url: jdbc:mysql://db-board.cztda90bd5ap.ap-northeast-2.rds.amazonaws.com:3306/BOARD?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
   username: fkskqufgk
   password: sh100422
+  
+ jpa:
+  properties:
+   hibernate:
+    formate_sql: true
+    hbm2ddl:
+     auto: create
+    physical_naming_startegy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    defer-datasource-initializetion: true
+    dataabase-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+    show-sql: true
+    generate-ddl: true
 
 #column name to camel case 카멜케이스가 변수명 정하는 룰
 mybatis:
