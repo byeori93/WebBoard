@@ -28,7 +28,12 @@ spring:
     open-in-view: false
     show-sql: true
     generate-ddl: true
-
+    
+#Gson HTTP Message Converter 설정(기본은 Json이라서 변경해준 것)
+ mvc:
+  converters:
+   preferred-json-mapper: gson
+   
 #column name to camel case 카멜케이스가 변수명 정하는 룰
 mybatis:
  configuration:

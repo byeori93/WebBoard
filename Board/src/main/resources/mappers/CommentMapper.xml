@@ -26,7 +26,7 @@
 			#{postId},
 			#{content},
 			#{writer},
-			IFNULL (#{deleteYn}, 'N'),
+			0,
 			NOW(),
 			NULL,
 			NULL
@@ -40,7 +40,7 @@
 		FROM
 			TB_COMMENT
 		WHERE
-			DELETE_YN = 'N'
+			DELETE_YN = 0
 		AND
 			ID = #{id}
 	</select>
@@ -62,7 +62,7 @@
 		UPDATE
 			TB_COMMENT
 		SET
-			DELETE_YN = 'Y',
+			DELETE_YN = 1,
 			DELETE_TIME = NOW()
 		WHERE
 			ID = #{id}
@@ -75,7 +75,7 @@
 		FROM
 			TB_COMMENT
 		WHERE
-			DELETE_YN = 'N'
+			DELETE_YN = 0
 		AND
 			POST_ID = #{postId}
 		ORDER BY
@@ -90,7 +90,7 @@
 		FROM
 			TB_COMMENT
 		WHERE
-			DELETE_YN = 'N'
+			DELETE_YN = 0
 		AND
 			POST_ID = #{postId}
 	</select>
