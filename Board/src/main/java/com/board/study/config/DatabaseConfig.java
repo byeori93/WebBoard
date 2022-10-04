@@ -61,7 +61,7 @@ public class DatabaseConfig {
 		tm.setEntityManagerFactory(entityManagerFactory);
 		return tm;
 	}
-	
+
 	@Bean
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();

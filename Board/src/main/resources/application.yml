@@ -10,6 +10,10 @@
 
 #aws rdsdb 연결
 spring:
+ sql:
+  init:
+   mode: never
+
  datasource:
   driver-class-name: com.mysql.cj.jdbc.Driver
   jdbc-url: jdbc:mysql://db-board.cztda90bd5ap.ap-northeast-2.rds.amazonaws.com:3306/BOARD?serverTimezone=Asia/Seoul&characterEncoding=UTF-8

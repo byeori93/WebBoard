@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.board.study.config.LocalDateTimeSerializer;
+import com.board.study.adapter.GsonLocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -22,15 +22,13 @@ public class CommentController {
 	@Autowired
 	private CommentService commentService;
 	
-	private GsonBuilder gsonBuilder = new GsonBuilder();
-	Gson serial = gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer()).setPrettyPrinting().create();
-	
 	@GetMapping(value = "/comments/{postId}")
 	public JsonObject getCommentList(@PathVariable("postId") Long boardId, @ModelAttribute("param") CommentDTO params) {
 		JsonObject jsonObj = new JsonObject();
 		List<CommentDTO> commentList = commentService.selectCommentList(params);
 		if (CollectionUtils.isEmpty(commentList) == false) {
-			JsonArray jsonarr = new Gson().toJsonTree(commentList).getAsJsonArray();
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter()).create();
+			JsonArray jsonarr =gson.toJsonTree(commentList).getAsJsonArray();
 			jsonObj.add("commentList", jsonarr);
 		}
 		return jsonObj;
