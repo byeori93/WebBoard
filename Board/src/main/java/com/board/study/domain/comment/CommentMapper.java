@@ -11,7 +11,7 @@ public interface CommentMapper {
 	 * 댓글 등록
 	 * @param params 댓글 정보
 	 */
-	void insertComment(CommentDTO params);
+	boolean insertComment(CommentDTO params);
 	
 	/**
 	 * 댓글 상세내용 조회
@@ -24,7 +24,7 @@ public interface CommentMapper {
 	 * 댓글 수정
 	 * @param params 수정 내용
 	 */
-	void updateComment(CommentDTO params);
+	boolean updateComment(CommentDTO params);
 	
 	/**
 	 * 댓글 삭제

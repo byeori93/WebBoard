@@ -28,3 +28,7 @@ function isValid(target, fieldName, focusTarget) {
     ( !focusTarget ? target : focusTarget).focus();
     return false;
 }
+
+function isEmpty(str) {
+	return (str == '' || str == undefined || str == null || str == 'null');
+}

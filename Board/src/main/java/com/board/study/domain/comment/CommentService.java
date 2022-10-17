@@ -19,9 +19,9 @@ public class CommentService {
 	 * @return Generated PK
 	 */
 	@Transactional
-	public Long insertComment(final CommentDTO params) {
-		commentMapper.insertComment(params);
-		return params.getId();
+	public boolean insertComment(final CommentDTO params) {
+		boolean insert = commentMapper.insertComment(params);
+		return insert;
 	}
 	
 	/**
@@ -39,9 +39,9 @@ public class CommentService {
 	 * @return PK
 	 */
 	@Transactional
-	public Long updateComment(final CommentDTO params) {
-		commentMapper.updateComment(params);
-		return params.getId();
+	public boolean updateComment(final CommentDTO params) {
+		boolean update = commentMapper.updateComment(params);
+		return update;
 	}
 	
 	/**
