@@ -29,8 +29,9 @@ public interface CommentMapper {
 	/**
 	 * 댓글 삭제
 	 * @param id PK
+	 * @return 
 	 */
-	void deleteComment(Long id);
+	boolean deleteComment(Long id);
 	
 	/**
 	 * 댓글 목록 조회

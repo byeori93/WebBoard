@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ public class CommentController {
 	@Autowired
 	private CommentService commentService;
 	
+	//댓글 리스트
 	@GetMapping(value = "/comments/{postId}")
 	public JsonObject getCommentList(@PathVariable("postId") Long boardId, @ModelAttribute("param") CommentDTO params) {
 		JsonObject jsonObj = new JsonObject();
@@ -38,6 +40,7 @@ public class CommentController {
 		return jsonObj;
 	}
 	
+	//댓글 입력&수정
 	@RequestMapping(value = {"/comments", "/comments/{id}"}, method = {RequestMethod.POST, RequestMethod.PATCH})
 	public JsonObject insertComment(@PathVariable(value = "id", required = false) Long id, @RequestBody final CommentDTO params) {
 		JsonObject jsonObj = new JsonObject();
@@ -55,6 +58,21 @@ public class CommentController {
 			jsonObj.addProperty("message", "데이터베이스 처리 과정에서 문제가 발생하였습니다.");
 		} catch (Exception e) {
 			jsonObj.addProperty("message", "시스템에 문제가 발생하였습니다.");
+		}
+		return jsonObj;
+	}
+	
+	//댓글 삭제
+	@DeleteMapping(value = "/comments/{id}")
+	public JsonObject deleteComment(@PathVariable("id") final Long id) {
+		JsonObject jsonObj = new JsonObject();
+		try {
+			boolean isDeleted = commentService.deleteComment(id);
+			jsonObj.addProperty("result", isDeleted);
+		} catch (DataAccessException e) {
+			jsonObj.addProperty("message", "데이터베이스 처리 과정에 문제가 발생하였습니다.");
+		} catch (Exception e) {
+			jsonObj.addProperty("message", "시스템에 문제가 발생했습니다.");
 		}
 		return jsonObj;
 	}

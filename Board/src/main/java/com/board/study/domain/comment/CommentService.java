@@ -50,9 +50,9 @@ public class CommentService {
 	 * @return PK
 	 */
 	@Transactional
-	public Long deleteComment(final Long id) {
-		commentMapper.deleteComment(id);
-		return id;
+	public boolean deleteComment(final Long id) {
+		boolean delete = commentMapper.deleteComment(id);
+		return delete;
 	}
 	
 	/**
