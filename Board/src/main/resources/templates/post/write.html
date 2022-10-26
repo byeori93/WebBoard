@@ -6,7 +6,7 @@
 	
 	<th:block layout:fragment="content">
 		<div class="card-content">
-			<form id="saveForm" class="form-horizental" method="post" autocomplete="off">
+			<form id="saveForm" class="form-horizental" method="post" autocomplete="off" enctype="multipart/form-data">
 				<!-- 기존 게시글 수정인 경우, 서버로 전달할 게시글 번호(id) -->
 				<input type="hidden" id="id" name="id" th:if="${post} != null" th:value="${post.id}"/>
 				
@@ -40,9 +40,25 @@
                         <textarea id="content" name="content" class="form-control" maxlength="1000" placeholder="내용을 입력해 주세요."></textarea>
                     </div>
                 </div>
+                
+				<div data-name="fileDiv" class="form-group filebox bs3-primary">
+					<label for="file_0" class="col-sm-2 control-label">파일1</label>
+					<div class="col-sm-10">
+						<input type="text" class="upload-name" value="파일 찾기" readonly="readonly">
+						<label for="file_0" class="contorl-label">찾아보기</label>
+						<input type="file" name="files" id="file_0" class="upload-hidden" onchange="changeFilename(this)">
+						<button type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+						</button>
+						<button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+							<i class="fa fa-minus" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
 			</form>
 			
-			<div class="btn_wrap text-center">
+			
+			<div id="btnDiv" class="btn_wrap text-center">
                 <a href="javascript: void(0)" onclick="goListPage();" class="btn btn-default waves-effect waves-light">뒤로가기</a>
                 <button type="button" class="btn btn-primary waves-effect waves-light" onclick="savePost();">저장하기</button>
             </div>
@@ -52,7 +68,7 @@
     <th:block layout:fragment="script">
         <script th:inline="javascript">
         /*<![CDATA[*/
-
+			
         	window.onload = () => {
         		renderPostInfo();
         	}
@@ -97,6 +113,57 @@
             	queryString.delete('id');
             	location.href = '/post/list.do' + '?' + queryString.toString();
             }
+            
+        	//파일 인덱스 처리용 전역변수
+        	let fileId = 0; 
+            
+        	//+버튼 눌러서 파일첨부 영역을 늘리기(3개까지)
+            function addFile() {
+        	    const fileDivs = $('div[data-name="fileDiv"]');
+        	    if (fileDivs.length > 2) {
+        		    alert('파일은 최대 3개까지 업로드 할 수 있습니다.');
+        		    return false;
+        	    }
+        	   
+        	    fileId++;
+        	   
+        	    const fileHtml = `
+        	   			<div data-name="fileDiv" class="form-group filebox bs3-primary">
+        	   				<label for="file_${fileId}" class="col-sm-2 control-label"></label>
+        	   				<div class="col-sm-10">
+        	   					<input type="text" class="upload-name" value="파일 찾기" readonly />
+        	   					<label for="file_${fileId}" class="control-label">찾아보기</label>
+        	   					<input type="file" name="files" id="file_${fileId}" class="upload-hidden" onchange="changeFilename(this)" />
+        	   					<button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+        	   						<i class="fa fa-minus" aria-hidden="true"></i>
+        	   					</button>	
+        	   				</div>
+        	   			</div>
+        	   `;
+        	   $('#btnDiv').before(fileHtml);
+           }
+           
+           function removeFile(elem) {
+        	   const prevTag = $(elem).prev().prop('tagName');
+        	   if (prevTag == 'BUTTON') {
+        		   const file = $(elem).prevAll('input[type="file"]');
+        		   const filename = $(elem).prevAll('input[type="text"]');
+        		   file.val('');
+        		   filename.val('파일 찾기');
+        		   return false;
+        	   }
+        	   
+        	   const target = $(elem).parents('div[data-name="fileDiv"]');
+        	   target.remove();
+           }
+           
+           //파일이 첨부되었을 때 그 파일 이름으로 표시
+           function changeFilename(file) {
+        	   file = $(file);
+        	   const filename = file[0].files[0].name;
+        	   const target = file.prevAll('input');
+        	   target.val(filename);
+           }
         /*]]>*/
         </script>
     </th:block>

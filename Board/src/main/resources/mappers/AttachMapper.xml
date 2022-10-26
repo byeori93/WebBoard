@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.study.domain.attach.AttachMapper">
+
+	<sql id="attachColumns">
+		ID,
+		POST_ID,
+		ORIGINAL_NAME,
+		SAVE_NAME,
+		SIZE,
+		DELETE_YN,
+		INSERT_TIME,
+		DELETE_TIME
+	</sql>
+	
+	<insert id="insertAttach" parameterType="list">
+		INSERT INTO TB_ATTACH (
+			<include refid="attachColumns" />
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+		(
+			#{item.id},
+			#{item.postId},
+			#{item.originalName},
+			#{item.saveName},
+			#{item.size},
+			0,
+			NOW(),
+			NULL
+		)
+		</foreach>
+	</insert>
+	
+	<select id="selectAttachDetail" parameterType="long" resultType="com.board.study.domain.attach.AttachDTO">
+		SELECT
+			<include refid="attachColumns" />
+		FROM
+			TB_ATTACH
+		WHERE
+			DELETE_YN = 0
+		AND
+			ID = #{id}
+	</select>
+	
+	<update id="deleteAttach" parameterType="long">
+		UPDATE
+			TB_ATTACH
+		SET
+			DELETE_YN = 1,
+			DELETE_TIME = NOW()
+		WHERE
+			POST_ID = #{postId}
+	</update>
+	
+	<select id="selectAttacgList" parameterType="long" resultType="com.board.study.domain.attach.AttachDTO">
+		SELECT
+			<include refid="attachColumns" />
+		FROM
+			TB_ATTACH
+		WHERE
+			DELETE_YN = 0
+		AND
+			POST_ID = #{postId}
+	</select>
+	
+	<select id="selectAttachTotalCount" parameterType="long" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_ATTACH
+		WHERE
+			DELETE_YN = 0
+		AND
+			POST_ID = #{postId}
+	</select>
+	
+</mapper>

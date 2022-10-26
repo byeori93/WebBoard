@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.board.study.common.dto.MessageDTO;
 import com.board.study.common.dto.SearchDTO;
@@ -34,8 +35,8 @@ public class PostController {
 	
 	//신규 게시글 생성
 	@PostMapping("/post/save.do")
-	public String savePost(final PostRequest params, Model model) {
-		postService.savePost(params);
+	public String savePost(final PostRequest params, final MultipartFile[] files, Model model) {
+		postService.savePost(params, files);
 		MessageDTO message = new MessageDTO("게시글 생성이 완료되었습니다", "/post/list.do", RequestMethod.GET, null);
 		return showMessageAndRedirect(message, model);
 	}

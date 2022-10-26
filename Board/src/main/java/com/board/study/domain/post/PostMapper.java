@@ -3,6 +3,7 @@ package com.board.study.domain.post;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.board.study.common.dto.SearchDTO;
 
@@ -14,6 +15,8 @@ public interface PostMapper {
 	 * @param params - 게시글 정보
 	 */
 	void save(PostRequest params);
+	
+	void save(PostRequest params, MultipartFile[] files);
 	
 	/**
 	 * 게시글 상세정보 조회
