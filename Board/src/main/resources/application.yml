@@ -15,8 +15,9 @@ spring:
    mode: never
 
  datasource:
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  jdbc-url: jdbc:mysql://db-board.cztda90bd5ap.ap-northeast-2.rds.amazonaws.com:3306/BOARD?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  jdbc-url: jdbc:log4jdbc:mysql://board.chi0wljganza.ap-northeast-2.rds.amazonaws.com:3306/BOARD?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  connection-test-query: SELECT NOW() FROM dual
   username: fkskqufgk
   password: sh100422
   

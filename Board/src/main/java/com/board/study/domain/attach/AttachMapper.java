@@ -41,4 +41,11 @@ public interface AttachMapper {
 	 * @return 파일 개수
 	 */
 	public int selectAttachTotalCount(Long postId);
+	
+	/**
+	 * 파일의 삭제 취소
+	 * @param ids - 파일 번호(PK)
+	 * @return 성공여부
+	 */
+	public int undeleteAttacth(List<Long> ids);
 }

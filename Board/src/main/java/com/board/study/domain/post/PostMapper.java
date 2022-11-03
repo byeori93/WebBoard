@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.board.study.common.dto.SearchDTO;
+import com.board.study.domain.attach.AttachDTO;
 
 @Mapper
 public interface PostMapper {
@@ -16,7 +17,7 @@ public interface PostMapper {
 	 */
 	void save(PostRequest params);
 	
-	void save(PostRequest params, MultipartFile[] files);
+	boolean save(PostRequest params, MultipartFile[] files);
 	
 	/**
 	 * 게시글 상세정보 조회
@@ -48,4 +49,11 @@ public interface PostMapper {
 	 * @return 게시글 수
 	 */
 	int count(SearchDTO params);
+	
+	/**
+	 * 첨부파일 리스트 조회
+	 * @param postId - 게시글 번호
+	 * @return 게시글 리스트
+	 */
+	List<AttachDTO> getAttachFileList(Long postId);
 }

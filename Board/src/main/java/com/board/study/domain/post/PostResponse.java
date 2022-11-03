@@ -1,6 +1,7 @@
 package com.board.study.domain.post;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 
@@ -15,4 +16,6 @@ public class PostResponse {
 	private Boolean deleteYn;			//삭제여부
 	private LocalDateTime createdDate;	//생성일시
 	private LocalDateTime modifiedDate;	//최종 수정일시
+	private String changeYn;		//파일 변경 여부
+	private List<Long> fileIds;		//파일 번호 리스트
 }

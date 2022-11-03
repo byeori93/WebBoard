@@ -52,7 +52,7 @@
 			POST_ID = #{postId}
 	</update>
 	
-	<select id="selectAttacgList" parameterType="long" resultType="com.board.study.domain.attach.AttachDTO">
+	<select id="selectAttachList" parameterType="long" resultType="com.board.study.domain.attach.AttachDTO">
 		SELECT
 			<include refid="attachColumns" />
 		FROM
@@ -73,5 +73,17 @@
 		AND
 			POST_ID = #{postId}
 	</select>
+	
+	<update id="undeleteAttacth" parameterType="list">
+		UPDATE
+			TB_ATTACH
+		SET
+			DELETE_YN = 0
+		WHERE
+			ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
 	
 </mapper>

@@ -10,6 +10,9 @@
 				<!-- 기존 게시글 수정인 경우, 서버로 전달할 게시글 번호(id) -->
 				<input type="hidden" id="id" name="id" th:if="${post} != null" th:value="${post.id}"/>
 				
+				<!-- 파일이 변경된 경우, 해당 파라미터를 이용하여 파일 삭제 및 재등록 처리 -->
+				<input type="hidden" id="changeYn" name="changeYn" th:value="N" />
+				
 				<!-- 서버로 전달할 공지 여부 -->
 				<input type="hidden" id="noticeYn" name="noticeYn"/>
 				
@@ -40,13 +43,14 @@
                         <textarea id="content" name="content" class="form-control" maxlength="1000" placeholder="내용을 입력해 주세요."></textarea>
                     </div>
                 </div>
-                
-				<div data-name="fileDiv" class="form-group filebox bs3-primary">
+
+				<!-- 저장된 파일이 없는 영역 -->
+				<div th:if="${#lists.isEmpty( fileList )}" data-name="fileDiv" class="form-group filebox bs3-primary">
 					<label for="file_0" class="col-sm-2 control-label">파일1</label>
 					<div class="col-sm-10">
-						<input type="text" class="upload-name" value="파일 찾기" readonly="readonly">
-						<label for="file_0" class="contorl-label">찾아보기</label>
-						<input type="file" name="files" id="file_0" class="upload-hidden" onchange="changeFilename(this)">
+						<input type="text" class="upload-name" value="파일 찾기" readonly="readonly" />
+						<label for="file_0" class="control-label">찾아보기</label>
+						<input type="file" name="files" id="file_0" class="upload-hidden" onchange="changeFilename(this)" />
 						<button type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
 							<i class="fa fa-plus" aria-hidden="true"></i>
 						</button>
@@ -55,14 +59,32 @@
 						</button>
 					</div>
 				</div>
+				
+				<!-- 저장된 파일이 있는 영역 -->
+				<div th:unless="${#lists.isEmpty( fileList )}" th:each="row, status : ${fileList}" data-name="fileDiv" class="form-group filebox bs3-primary">
+					<label th:for="|file_${status.index}|" class="col-sm-2 control-label">[[ |파일${status.count}| ]]</label>
+					<div class="col-sm-10">
+						<input type="hidden" name="fileIds" th:value="${row.id}" />
+						<input type="text" class="upload-name" th:value="${row.originalName}" readonly="readonly" />
+						<label th:for="|file_${status.index}|" class="control-label">찾아보기</label>
+						<input type="file" name="files" th:id="|file_${status.index}|" class="upload-hidden" onchange="changeFilename(this)" />
+						<button type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+						</button>
+						<button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+							<i class="fa fa-minus" aria-hidden="true"></i>
+						</button>						
+					</div>
+				</div>
+
+				<div id="btnDiv" class="btn_wrap text-center">
+	                <a href="javascript: void(0)" onclick="goListPage();" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+	                <button type="button" class="btn btn-primary waves-effect waves-light" onclick="savePost();">저장하기</button>
+	            </div>
 			</form>
-			
-			
-			<div id="btnDiv" class="btn_wrap text-center">
-                <a href="javascript: void(0)" onclick="goListPage();" class="btn btn-default waves-effect waves-light">뒤로가기</a>
-                <button type="button" class="btn btn-primary waves-effect waves-light" onclick="savePost();">저장하기</button>
-            </div>
 		</div>
+			
+			
 	</th:block>
 
     <th:block layout:fragment="script">
@@ -114,9 +136,13 @@
             	location.href = '/post/list.do' + '?' + queryString.toString();
             }
             
-        	//파일 인덱스 처리용 전역변수
-        	let fileId = 0; 
+            //업로드 파일 리스트
+            const fileList = [[ ${fileList} ]];
             
+        	//파일 인덱스 처리용 전역변수
+        	let fileId = isEmpty(fileList) ? 0 : fileList.length;
+            
+        	
         	//+버튼 눌러서 파일첨부 영역을 늘리기(3개까지)
             function addFile() {
         	    const fileDivs = $('div[data-name="fileDiv"]');
@@ -125,6 +151,7 @@
         		    return false;
         	    }
         	   
+        	    document.getElementById('changeYn').value = 'Y';
         	    fileId++;
         	   
         	    const fileHtml = `
@@ -144,13 +171,14 @@
            }
            
            function removeFile(elem) {
+        	   document.getElementById('changeYn').value = 'Y';
         	   const prevTag = $(elem).prev().prop('tagName');
         	   if (prevTag == 'BUTTON') {
         		   const file = $(elem).prevAll('input[type="file"]');
         		   const filename = $(elem).prevAll('input[type="text"]');
         		   file.val('');
         		   filename.val('파일 찾기');
-        		   return false;
+        		   $(elem).prevAll('input[name="fileIds"]').remove();
         	   }
         	   
         	   const target = $(elem).parents('div[data-name="fileDiv"]');
@@ -159,10 +187,13 @@
            
            //파일이 첨부되었을 때 그 파일 이름으로 표시
            function changeFilename(file) {
+        	   document.getElementById('changeYn').value = 'Y';
         	   file = $(file);
         	   const filename = file[0].files[0].name;
-        	   const target = file.prevAll('input');
+        	   const target = file.prevAll('input.upload-name'); //input에서 input.upload-name으로 변경
         	   target.val(filename);
+        	   
+        	   file.prevAll('input[name="fileIds"]').remove(); //이 인풋을 삭제하지 않으면 수정해도 기존의 파일도 동시에 업로드된다
            }
         /*]]>*/
         </script>

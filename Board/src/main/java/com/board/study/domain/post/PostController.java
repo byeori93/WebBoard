@@ -1,5 +1,6 @@
 package com.board.study.domain.post;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.board.study.common.dto.MessageDTO;
 import com.board.study.common.dto.SearchDTO;
+import com.board.study.domain.attach.AttachDTO;
+import com.board.study.domain.attach.AttachMapper;
 import com.board.study.paging.PagingResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 	
 	private final PostService postService;
+	private final AttachMapper attachMapper;
 	
 	//게시글 작성화면
 	@GetMapping("/post/write.do")
@@ -29,6 +33,8 @@ public class PostController {
 		if (id != null) {
 			PostResponse post = postService.findPostById(id);
 			model.addAttribute("post", post);
+			List<AttachDTO> fileList = attachMapper.selectAttachList(id);
+			model.addAttribute("fileList", fileList);
 		}
 		return "post/write";
 	}
@@ -43,8 +49,8 @@ public class PostController {
 	
 	//게시글 업데이트
 	@PostMapping("/post/update.do")
-	public String updatePost(@RequestParam final Map<String, Object> qeuryParams, final PostRequest params, Model model) {
-		postService.updatePost(params);
+	public String updatePost(@RequestParam final Map<String, Object> qeuryParams, final PostRequest params, final MultipartFile[] files, Model model) {
+		postService.updatePost(params, files);
 		MessageDTO message = new MessageDTO("게시글 수정이 완료되었습니다", "/post/list.do", RequestMethod.GET, qeuryParams);
 		return showMessageAndRedirect(message, model);
 	}
