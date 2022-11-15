@@ -1,6 +1,5 @@
 package com.board.study.domain.post;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -119,17 +118,5 @@ public class PostService {
 		List<PostResponse> list = postMapper.findAll(params);
 		return new PagingResponse<>(list, pagination);
 	}
-	
-	/**
-	 * 첨부파일 리스트 조회
-	 * @param postId - 게시글 번호
-	 * @return 첨부파일 리스트
-	 */
-	public List<AttachDTO> getAttachFileList(Long postId) {
-		int fileTotalCount = attachMapper.selectAttachTotalCount(postId);
-		if (fileTotalCount < 1) {
-			return Collections.emptyList();
-		}
-		return attachMapper.selectAttachList(postId);
-	}
+
 }

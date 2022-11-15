@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.board.study.common.dto.MessageDTO;
 import com.board.study.common.dto.SearchDTO;
 import com.board.study.domain.attach.AttachDTO;
-import com.board.study.domain.attach.AttachMapper;
+import com.board.study.domain.attach.AttachService;
 import com.board.study.paging.PagingResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 	
 	private final PostService postService;
-	private final AttachMapper attachMapper;
+	private final AttachService attachService;
 	
 	//게시글 작성화면
 	@GetMapping("/post/write.do")
@@ -33,7 +33,7 @@ public class PostController {
 		if (id != null) {
 			PostResponse post = postService.findPostById(id);
 			model.addAttribute("post", post);
-			List<AttachDTO> fileList = attachMapper.selectAttachList(id);
+			List<AttachDTO> fileList = attachService.selectAttachFileList(id);
 			model.addAttribute("fileList", fileList);
 		}
 		return "post/write";
@@ -66,6 +66,17 @@ public class PostController {
 	//게시글 상세정보 조회
 	@GetMapping("/post/view.do")
 	public String openPostView(@RequestParam final Long id, Model model) {
+		//게시글 번호가 삭제된 경우
+		boolean deleteYn = postService.findPostById(id).getDeleteYn();
+		if (deleteYn) {
+			MessageDTO message = new MessageDTO("올바르지 않은 접근입니다", "list.do", RequestMethod.GET, null);
+			return showMessageAndRedirect(message, model);
+		}
+		
+		//첨부파일
+		List<AttachDTO> fileList = attachService.selectAttachFileList(id);
+		model.addAttribute("fileList",fileList);
+		
 		PostResponse post = postService.findPostById(id);
 		model.addAttribute("post", post);
 		return "/post/view";
@@ -86,4 +97,5 @@ public class PostController {
 		model.addAttribute("params", params);
 		return "common/messageRedirect";
 	}
+
 }
