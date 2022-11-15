@@ -49,9 +49,10 @@ public class PostController {
 	
 	//게시글 업데이트
 	@PostMapping("/post/update.do")
-	public String updatePost(@RequestParam final Map<String, Object> qeuryParams, final PostRequest params, final MultipartFile[] files, Model model) {
+	public String updatePost(@RequestParam final Map<String, Object> queryParams, final PostRequest params, final MultipartFile[] files, Model model) {
 		postService.updatePost(params, files);
-		MessageDTO message = new MessageDTO("게시글 수정이 완료되었습니다", "/post/list.do", RequestMethod.GET, qeuryParams);
+		deleteQueryInfo(queryParams);
+		MessageDTO message = new MessageDTO("게시글 수정이 완료되었습니다", "/post/list.do", RequestMethod.GET, queryParams);
 		return showMessageAndRedirect(message, model);
 	}
 	
@@ -88,6 +89,7 @@ public class PostController {
 							 @RequestParam final Map<String, Object> queryParmas,
 							 Model model) {
 		postService.deletePost(id);
+		deleteQueryInfo(queryParmas);
 		MessageDTO message = new MessageDTO("게시글 삭제가 완료되었습니다", "/post/list.do", RequestMethod.GET, queryParmas);
 		return showMessageAndRedirect(message, model);
 	}
@@ -98,4 +100,14 @@ public class PostController {
 		return "common/messageRedirect";
 	}
 
+	//queryParams에서 필요 없는 정보 삭제
+	private void deleteQueryInfo(Map<String, Object> queryParams) {
+		queryParams.remove("noticeYn");
+		queryParams.remove("changeYn");
+		queryParams.remove("fileIds");
+		queryParams.remove("id");
+		queryParams.remove("writer");
+		queryParams.remove("title");
+		queryParams.remove("content");
+	}
 }
